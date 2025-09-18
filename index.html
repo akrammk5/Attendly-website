@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendly – The Last Time Clock You'll Ever Buy.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glow-color: #00d4ff;
+            --glow-color-alt: #007bff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #050818;
+            color: #E2E8F0; /* Slate 200 */
+            overflow-x: hidden;
+        }
+
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* --- Background Particles Canvas --- */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* --- Custom Gradient & Glow Effects --- */
+        .neon-glow-text {
+            text-shadow:
+                0 0 5px var(--glow-color),
+                0 0 10px var(--glow-color),
+                0 0 20px var(--glow-color),
+                0 0 40px var(--glow-color-alt),
+                0 0 80px var(--glow-color-alt);
+        }
+        
+        .soft-glow-text {
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+
+        .holographic-gradient-bg {
+             background: linear-gradient(135deg, rgba(5, 8, 24, 0.5) 0%, rgba(0, 123, 255, 0.1) 50%, rgba(5, 8, 24, 0.5) 100%);
+        }
+        
+        .cinematic-gradient-bg {
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 123, 255, 0.2), transparent 40%),
+                              radial-gradient(circle at 0% 100%, rgba(0, 212, 255, 0.15), transparent 30%),
+                              radial-gradient(circle at 100% 100%, rgba(0, 123, 255, 0.15), transparent 30%);
+        }
+
+        /* --- Glassmorphism Card Style --- */
+        .glassmorphic-card {
+            background: rgba(14, 21, 57, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 123, 255, 0.1);
+            transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+        }
+        
+        .glassmorphic-card:hover {
+            background: rgba(14, 21, 57, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            box-shadow: 0 0 40px 0 rgba(0, 123, 255, 0.2);
+        }
+
+        /* --- Glowing Button Style --- */
+        .glow-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(90deg, var(--glow-color-alt), var(--glow-color));
+            box-shadow: 0 0 15px var(--glow-color-alt), 0 0 30px var(--glow-color);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 25px var(--glow-color-alt), 0 0 50px var(--glow-color);
+        }
+        .glow-btn-secondary {
+            border: 1px solid var(--glow-color);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .glow-btn-secondary:hover {
+             background-color: rgba(0, 212, 255, 0.1);
+             box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        /* --- Section Animations --- */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Highlighting for pricing plan */
+        .highlight-plan {
+            border: 2px solid var(--glow-color);
+            box-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color-alt), inset 0 0 15px rgba(0, 212, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Testimonial Carousel styles */
+        .testimonial-carousel .slick-slide {
+            padding: 0 1rem;
+        }
+    </style>
+     <!-- Slick Carousel CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+</head>
+<body class="font-poppins">
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 py-4 px-4 sm:px-6 lg:px-8 bg-black/30 backdrop-blur-md border-b border-white/10">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-white neon-glow-text" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v6h6v-2h-4V7z"></path></svg>
+                <h1 class="text-2xl font-bold text-white soft-glow-text">Attendly</h1>
+            </div>
+            <nav class="hidden md:flex items-center space-x-8 text-slate-300">
+                <a href="#features" class="hover:text-white hover:soft-glow-text transition-all duration-300">Features</a>
+                <a href="#how-it-works" class="hover:text-white hover:soft-glow-text transition-all duration-300">How It Works</a>
+                <a href="#pricing" class="hover:text-white hover:soft-glow-text transition-all duration-300">Pricing</a>
+                <a href="#faq" class="hover:text-white hover:soft-glow-text transition-all duration-300">FAQ</a>
+            </nav>
+            <a href="#pricing" class="hidden md:inline-block glow-btn-secondary text-white font-semibold px-5 py-2 rounded-lg transition">
+                Get Attendly Now
+            </a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center overflow-hidden cinematic-gradient-bg pt-24 md:pt-20">
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-tight neon-glow-text">
+                            The Last Time Clock <br class="hidden md:block"> You'll Ever Buy.
+                        </h2>
+                        <p class="mt-8 max-w-2xl text-lg text-slate-300">
+                            Stop paying monthly subscription fees. Attendly is a simple, powerful, and secure time tracking system that runs on your FREE Google account. Own your software, forever.
+                        </p>
+                        <div class="mt-12 flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4">
+                            <a href="#pricing" class="w-full sm:w-auto glow-btn text-black font-bold px-8 py-4 rounded-lg transition transform hover:scale-105">
+                                Get Your Lifetime Deal
+                            </a>
+                            <a href="#" class="w-full sm:w-auto glow-btn-secondary text-white font-semibold px-8 py-4 rounded-lg transition transform hover:scale-105 flex items-center justify-center gap-2">
+                                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                                Watch Demo
+                            </a>
+                        </div>
+                         <p class="mt-8 text-sm text-slate-400">No monthly fees. No user limits. Full data privacy.</p>
+                    </div>
+                    <div class="hidden md:flex justify-center items-center relative">
+                        <img src="https://iili.io/K5GqoYB.png" alt="Attendly Product Box" class="relative z-10 max-w-md w-full">
+                        <!-- Holographic glow effect -->
+                        <div class="absolute z-0 w-full h-full bg-cyan-400/20 rounded-full blur-3xl animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof -->
+        <section class="py-12">
+             <div class="container mx-auto px-6 text-center fade-in-up">
+                <p class="text-slate-400 mb-8">Trusted by innovative small businesses worldwide:</p>
+                <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
+                    <img src="https://placehold.co/140x40/050818/E2E8F0?text=StartupHub" alt="StartupHub Logo" class="h-7 opacity-70">
+                    <img src="https://placehold.co/180x40/050818/E2E8F0?text=CreativeMinds" alt="CreativeMinds Inc. Logo" class="h-7 opacity-70">
+                    <img src="https://placehold.co/160x40/050818/E2E8F0?text=EcoSolutions" alt="EcoSolutions Logo" class="h-7 opacity-70">
+                    <img src="https://placehold.co/170x40/050818/E2E8F0?text=Local+Charity" alt="The Local Charity Logo" class="h-7 opacity-70">
+                    <img src="https://placehold.co/190x40/050818/E2E8F0?text=QuantumLeap" alt="QuantumLeap Agency Logo" class="h-7 opacity-70">
+                </div>
+            </div>
+        </section>
+
+        <!-- Problem/Solution Section -->
+        <section class="py-20 md:py-32">
+            <div class="container mx-auto px-4">
+                 <div class="grid md:grid-cols-2 gap-12 items-start">
+                    <!-- Problem -->
+                    <div class="space-y-6 fade-in-up">
+                        <h2 class="text-3xl font-bold text-white soft-glow-text">Are You Tired Of...</h2>
+                        <div class="space-y-4 text-slate-300">
+                            <p><strong class="text-lg text-red-500">💸 Endless Subscription Fees?</strong> Paying every single month for basic time tracking software that eats into your profits.</p>
+                            <p><strong class="text-lg text-red-500">🤯 Complex, Bloated Software?</strong> Using clunky systems with dozens of features you don't need, confusing your employees.</p>
+                            <p><strong class="text-lg text-red-500">🔒 Data Privacy Concerns?</strong> Storing your sensitive employee and payroll data on third-party servers you don't control.</p>
+                            <p><strong class="text-lg text-red-500"> manualmente Manual Spreadsheet Chaos?</strong> Wasting hours manually entering times, checking for errors, and calculating payroll.</p>
+                        </div>
+                    </div>
+                    <!-- Solution -->
+                    <div class="glassmorphic-card p-8 rounded-lg space-y-6 fade-in-up" style="transition-delay: 200ms;">
+                        <h2 class="text-3xl font-bold text-cyan-300">Introducing Attendly: The Simple, Smart Solution</h2>
+                         <div class="space-y-4 text-slate-300">
+                            <p><strong class="text-lg text-green-400">✅ One-Time Purchase.</strong> Buy Attendly once and own it forever. It leverages the power of your free Google Workspace account, eliminating recurring costs.</p>
+                            <p><strong class="text-lg text-green-400">✨ Beautifully Simple.</strong> A clean, intuitive interface that employees can use from day one with zero training. It works flawlessly on any device—desktop, tablet, or mobile.</p>
+                            <p><strong class="text-lg text-green-400">🔐 100% Yours.</strong> All your attendance data is stored securely in your own Google Sheet, under your control. We never see or store your data.</p>
+                            <p><strong class="text-lg text-green-400">🚀 Fully Automated.</strong> Attendly automatically records punch-ins, calculates total hours worked, and flags discrepancies, saving you hours of administrative work every week.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-20 md:py-32 holographic-gradient-bg">
+            <div class="container mx-auto px-4 text-center">
+                <div class="fade-in-up mb-16">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white soft-glow-text">How It Works in 3 Simple Steps</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-400">Getting started with Attendly is quick and painless.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-10">
+                     <!-- Step 1 -->
+                    <div class="glassmorphic-card p-8 rounded-lg text-center fade-in-up" style="transition-delay: 100ms;">
+                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center rounded-xl bg-blue-500/10 border border-blue-500/20">
+                            <svg class="w-10 h-10 text-cyan-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 005.625 21h12.75c1.24 0 2.25-1.01 2.25-2.25V11.25a9 9 0 00-9-9z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-white">SETUP (15 Mins)</h3>
+                        <p class="text-slate-400">Copy our pre-made Google Sheet template and deploy our secure Google Apps Script to your account with our step-by-step guide.</p>
+                    </div>
+                     <!-- Step 2 -->
+                    <div class="glassmorphic-card p-8 rounded-lg text-center fade-in-up" style="transition-delay: 200ms;">
+                        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center rounded-xl bg-blue-500/10 border border-blue-500/20">
+                           <svg class="w-10 h-10 text-cyan-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-white">PUNCH (Daily)</h3>
+                        <p class="text-slate-400">Employees visit your unique Attendly URL, select their name, verify with their date of birth, and punch in or out.</p>
+                    </div>
+                     <!-- Step 3 -->
+                    <div class="glassmorphic-card p-8 rounded-lg text-center fade-in-up" style="transition-delay: 300ms;">
+                         <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center rounded-xl bg-blue-500/10 border border-blue-500/20">
+                            <svg class="w-10 h-10 text-cyan-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125v-1.5c0-.621.504-1.125 1.125-1.125H6.75m13.5 4.5H1.5m16.5 0a1.125 1.125 0 001.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-4.5m-7.5 0h7.5m-7.5 0a1.125 1.125 0 01-1.125-1.125v-1.5c0-.621.504-1.125 1.125-1.125h1.5m-1.5 0a1.125 1.125 0 001.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H1.5m16.5 0a1.125 1.125 0 001.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-1.5m7.5 0a1.125 1.125 0 01-1.125-1.125v-1.5a1.125 1.125 0 011.125-1.125h1.5m-1.5 0a1.125 1.125 0 001.125-1.125V3.375c0-.621-.504-1.125-1.125-1.125h-1.5m-1.5 0h-7.5m7.5 0a1.125 1.125 0 01-1.125-1.125V3.375c0-.621-.504-1.125-1.125-1.125h-4.5" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-white">MANAGE (Instantly)</h3>
+                        <p class="text-slate-400">All attendance data appears instantly and accurately in your Google Sheet, with total hours and status calculated automatically.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Carousel -->
+        <section id="testimonials" class="py-20 md:py-32">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16 fade-in-up">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white soft-glow-text">Trusted by Industry Leaders</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-400">See how innovative companies are transforming their workflow with Attendly.</p>
+                </div>
+                <div class="testimonial-carousel fade-in-up">
+                    <!-- Testimonial 1 -->
+                    <div class="p-2">
+                        <div class="glassmorphic-card p-8 rounded-2xl h-full flex flex-col">
+                            <div class="flex items-center mb-4">
+                                <img src="https://i.pravatar.cc/60?u=1" alt="User Avatar" class="w-12 h-12 rounded-full mr-4 border-2 border-cyan-400">
+                                <div>
+                                    <h4 class="text-white font-bold">Sarah Jenkins</h4>
+                                    <p class="text-sm text-slate-400">CTO, QuantumLeap</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-4">
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                            </div>
+                            <p class="text-slate-300 flex-grow">"This is a game-changer. No more subscription fees, and we have full control over our data. The setup was surprisingly easy."</p>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="p-2">
+                         <div class="glassmorphic-card p-8 rounded-2xl h-full flex flex-col">
+                            <div class="flex items-center mb-4">
+                                <img src="https://i.pravatar.cc/60?u=2" alt="User Avatar" class="w-12 h-12 rounded-full mr-4 border-2 border-cyan-400">
+                                <div>
+                                    <h4 class="text-white font-bold">Mark Chen</h4>
+                                    <p class="text-sm text-slate-400">Owner, CreativeMinds</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-4">
+                               <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                            </div>
+                            <p class="text-slate-300 flex-grow">"The 'Done-For-You' package was worth every penny. The team had us set up in less than a day, complete with our own branding. Incredible value."</p>
+                        </div>
+                    </div>
+                     <!-- Testimonial 3 -->
+                    <div class="p-2">
+                         <div class="glassmorphic-card p-8 rounded-2xl h-full flex flex-col">
+                            <div class="flex items-center mb-4">
+                                <img src="https://i.pravatar.cc/60?u=3" alt="User Avatar" class="w-12 h-12 rounded-full mr-4 border-2 border-cyan-400">
+                                <div>
+                                    <h4 class="text-white font-bold">Jessica Rodriguez</h4>
+                                    <p class="text-sm text-slate-400">HR Manager, EcoSolutions</p>
+                                </div>
+                            </div>
+                           <div class="flex items-center mb-4">
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.446a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.539 1.118l-3.368-2.446a1 1 0 00-1.175 0l-3.368 2.446c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.064 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path></svg>
+                            </div>
+                            <p class="text-slate-300 flex-grow">"Our employees love how simple it is. No training needed. It just works, and all the data appears right in our Google Sheet instantly."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Grid -->
+        <section id="features" class="py-20 md:py-32">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16 fade-in-up">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white soft-glow-text">Features That Make a Difference</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-400">Powerful, simple features designed for small businesses.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="glassmorphic-card p-8 rounded-2xl fade-in-up">
+                        <h3 class="text-xl font-bold text-white mb-2">Secure Employee Validation</h3>
+                        <p class="text-slate-400">No forgotten passwords. Employees verify with their name and date of birth for simple, secure access.</p>
+                    </div>
+                    <div class="glassmorphic-card p-8 rounded-2xl fade-in-up" style="transition-delay: 100ms;">
+                        <h3 class="text-xl font-bold text-white mb-2">Automated Hour Calculation</h3>
+                        <p class="text-slate-400">Attendly automatically calculates the total hours worked (e.g., 8.50 hours) as soon as an employee punches out.</p>
+                    </div>
+                    <div class="glassmorphic-card p-8 rounded-2xl fade-in-up" style="transition-delay: 200ms;">
+                        <h3 class="text-xl font-bold text-white mb-2">Intelligent Status Updates</h3>
+                        <p class="text-slate-400">Get at-a-glance insights with automatic statuses like "On Time" or "Less Hours" based on your predefined work-hour rules.</p>
+                    </div>
+                    <div class="glassmorphic-card p-8 rounded-2xl fade-in-up" style="transition-delay: 300ms;">
+                        <h3 class="text-xl font-bold text-white mb-2">Duplicate Punch Prevention</h3>
+                        <p class="text-slate-400">The system is smart. It prevents an employee from punching in twice or punching out before they've punched in, ensuring clean data.</p>
+                    </div>
+                    <div class="glassmorphic-card p-8 rounded-2xl fade-in-up" style="transition-delay: 400ms;">
+                        <h3 class="text-xl font-bold text-white mb-2">Fully Responsive Design</h3>
+                        <p class="text-slate-400">Whether your team is in the office on a desktop or in the field on a mobile phone, the interface is seamless and easy to use.</p>
+                    </div>
+                    <div class="glassmorphic-card p-8 rounded-2xl fade-in-up" style="transition-delay: 500ms;">
+                        <h3 class="text-xl font-bold text-white mb-2">Runs on Google Workspace</h3>
+                        <p class="text-slate-400">Leverages the robust, secure, and free infrastructure of Google Sheets and Google Apps Script that you already trust.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-20 md:py-32 holographic-gradient-bg">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16 fade-in-up">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white soft-glow-text">Simple, Transparent Pricing</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-slate-400">One-time payment. Own it forever.</p>
+                </div>
+                <div class="grid lg:grid-cols-3 gap-8 items-center max-w-5xl mx-auto">
+                    <!-- Starter Plan -->
+                    <div class="glassmorphic-card p-8 rounded-2xl flex flex-col h-full fade-in-up" style="transition-delay: 100ms;">
+                        <h3 class="text-2xl font-bold text-cyan-300">Starter (DIY)</h3>
+                        <p class="text-4xl font-bold my-4 text-white">$49</p>
+                        <p class="text-slate-400 min-h-[48px]">One-Time Payment</p>
+                        <hr class="my-6 border-cyan-500/20">
+                        <ul class="space-y-3 text-slate-300 flex-grow">
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">✅</span>All Core Attendly Features</li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">✅</span>Full Codebase</li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">✅</span>Step-by-Step Deployment Guide</li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">✅</span>Google Sheet Template</li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1"></span>Standard Email Support</li>
+                        </ul>
+                        <a href="#" class="mt-8 text-center w-full glow-btn-secondary text-white font-semibold py-3 rounded-lg">Get Started</a>
+                    </div>
+
+                    <!-- Business Plan -->
+                    <div class="glassmorphic-card p-8 rounded-2xl flex flex-col h-full highlight-plan fade-in-up" style="transition-delay: 200ms;">
+                         <p class="absolute top-0 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-cyan-400 text-black px-4 py-1 rounded-full text-sm font-bold">Most Popular</p>
+                        <h3 class="text-2xl font-bold text-cyan-300">Business (Done-For-You)</h3>
+                        <p class="text-4xl font-bold my-4 text-white">$149</p>
+                        <p class="text-slate-400 min-h-[48px]">One-Time Payment</p>
+                        <hr class="my-6 border-cyan-500/20">
+                        <ul class="space-y-3 text-slate-300 flex-grow">
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">✅</span>All Core Attendly Features</li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">✅</span>Full Codebase</li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">✅</span>Google Sheet Template</li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">➕</span><strong>White-Glove Installation Service</strong></li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">➕</span><strong>Priority Email Support</strong></li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">➕</span><strong>Logo & Brand Customization</strong></li>
+                        </ul>
+                         <a href="#" class="mt-8 text-center w-full glow-btn text-black font-bold py-3 rounded-lg">Buy Now</a>
+                    </div>
+                    
+                    <!-- Enterprise Plan -->
+                     <div class="glassmorphic-card p-8 rounded-2xl flex flex-col h-full fade-in-up" style="transition-delay: 300ms;">
+                        <h3 class="text-2xl font-bold text-cyan-300">Enterprise (Custom)</h3>
+                        <p class="text-4xl font-bold my-4 text-white">Contact Us</p>
+                        <p class="text-slate-400 min-h-[48px]">Custom Quote</p>
+                        <hr class="my-6 border-cyan-500/20">
+                        <ul class="space-y-3 text-slate-300 flex-grow">
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">✅</span>All Business Features</li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">➕</span><strong>Dedicated Account Manager</strong></li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">➕</span><strong>Custom Feature Development</strong></li>
+                           <li class="flex items-start"><span class="text-cyan-400 mr-2 mt-1">➕</span><strong>Advanced Reporting & Integrations</strong></li>
+                        </ul>
+                         <a href="#" class="mt-8 text-center w-full glow-btn-secondary text-white font-semibold py-3 rounded-lg">Request a Quote</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-20 md:py-32">
+            <div class="container mx-auto px-4 max-w-3xl">
+                <div class="text-center mb-16 fade-in-up">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white soft-glow-text">Frequently Asked Questions</h2>
+                </div>
+                <div class="space-y-6">
+                    <div class="glassmorphic-card p-6 rounded-lg fade-in-up">
+                        <h3 class="font-bold text-lg text-cyan-300">What do I need to run Attendly?</h3>
+                        <p class="text-slate-300 mt-2">All you need is a standard, free Google account. The system runs entirely on Google Sheets and Google Apps Script.</p>
+                    </div>
+                     <div class="glassmorphic-card p-6 rounded-lg fade-in-up" style="transition-delay: 100ms;">
+                        <h3 class="font-bold text-lg text-cyan-300">Is it difficult to install?</h3>
+                        <p class="text-slate-300 mt-2">Not at all! Our Starter package comes with a detailed, step-by-step guide that will have you up and running in about 15-20 minutes. If you want us to handle everything, our Business package includes a complete white-glove installation service.</p>
+                    </div>
+                     <div class="glassmorphic-card p-6 rounded-lg fade-in-up" style="transition-delay: 200ms;">
+                        <h3 class="font-bold text-lg text-cyan-300">Is my data secure?</h3>
+                        <p class="text-slate-300 mt-2">Absolutely. Unlike other SaaS products, your data never passes through our servers. It stays securely within your own Google account, protected by Google's world-class security.</p>
+                    </div>
+                     <div class="glassmorphic-card p-6 rounded-lg fade-in-up" style="transition-delay: 300ms;">
+                        <h3 class="font-bold text-lg text-cyan-300">Can I customize the system?</h3>
+                        <p class="text-slate-300 mt-2">Yes. The code is fully accessible, allowing you or your developer to customize it. Our Business package includes adding your company name and logo for you.</p>
+                    </div>
+                     <div class="glassmorphic-card p-6 rounded-lg fade-in-up" style="transition-delay: 400ms;">
+                        <h3 class="font-bold text-lg text-cyan-300">What if I have more than 50 employees?</h3>
+                        <p class="text-slate-300 mt-2">The system is built on Google Sheets, which can handle thousands of rows of data without issue, making it suitable for growing businesses.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section id="cta" class="py-20 md:py-32 cinematic-gradient-bg">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight soft-glow-text">
+                    Your Time Tracking, Simplified. Forever.
+                </h2>
+                <p class="mt-6 max-w-xl mx-auto text-lg text-slate-300">
+                    Ready to ditch subscriptions and take control of your attendance data? Choose the plan that's right for you and get instant access to Attendly today.
+                </p>
+                <div class="mt-10">
+                    <a href="#pricing" class="inline-block glow-btn text-black font-bold text-lg px-10 py-5 rounded-lg transition transform hover:scale-105">
+                        Get Attendly Now - Own It Forever
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-16 border-t border-white/10">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Column 1: Logo & Socials -->
+                <div class="md:col-span-1">
+                     <div class="flex items-center space-x-2 mb-4">
+                        <svg class="w-8 h-8 text-white soft-glow-text" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v6h6v-2h-4V7z"></path></svg>
+                        <h3 class="text-2xl font-bold text-white">Attendly</h3>
+                    </div>
+                    <p class="text-slate-400 text-sm">The simple, one-time purchase time clock for smart businesses.</p>
+                    <div class="flex space-x-4 mt-6">
+                        <!-- Social Icons with holographic effect on hover -->
+                        <a href="#" class="text-slate-400 hover:text-cyan-400 hover:soft-glow-text transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                        <a href="#" class="text-slate-400 hover:text-cyan-400 hover:soft-glow-text transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616v.064c0 2.298 1.634 4.214 3.794 4.66-1.123.308-2.306.338-3.454.116.634 1.943 2.449 3.298 4.6 3.336-1.812 1.42-4.102 2.12-6.528 2.016-.48-.008-.952-.028-1.414-.082 2.33 1.492 5.093 2.348 8.046 2.348 9.638 0 14.922-7.98 14.62-14.834.99-.714 1.848-1.611 2.532-2.62z"/></svg></a>
+                    </div>
+                </div>
+                 <!-- Mini Sitemap -->
+                <div class="md:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-8">
+                     <div>
+                        <h4 class="font-bold text-white mb-4">Product</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li><a href="#features" class="hover:text-cyan-400">Features</a></li>
+                            <li><a href="#pricing" class="hover:text-cyan-400">Pricing</a></li>
+                            <li><a href="#how-it-works" class="hover:text-cyan-400">How It Works</a></li>
+                            <li><a href="#faq" class="hover:text-cyan-400">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white mb-4">Company</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li><a href="#" class="hover:text-cyan-400">About Us</a></li>
+                            <li><a href="#" class="hover:text-cyan-400">Contact</a></li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h4 class="font-bold text-white mb-4">Legal</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li><a href="#" class="hover:text-cyan-400">Privacy Policy</a></li>
+                            <li><a href="#" class="hover:text-cyan-400">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-12 text-center text-sm text-slate-500 border-t border-white/10 pt-8">
+                &copy; 2025 Attendly. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        // --- Particle Background Effect ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+        const particleConfig = {
+            count: 70,
+            size: 2,
+            speed: 0.5,
+            color: 'rgba(0, 212, 255, 0.7)',
+            lineColor: 'rgba(0, 123, 255, 0.1)',
+            maxDistance: 150
+        };
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = particleConfig.count;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * particleConfig.size) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * particleConfig.speed) - (particleConfig.speed / 2);
+                let directionY = (Math.random() * particleConfig.speed) - (particleConfig.speed / 2);
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, particleConfig.color));
+            }
+        }
+
+        function connectParticles() {
+            let maxDistance = particleConfig.maxDistance;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
+                        ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (maxDistance * maxDistance)) {
+                        ctx.strokeStyle = particleConfig.lineColor;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connectParticles();
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+
+
+        // --- Intersection Observer for Fade-in Animations ---
+        const sections = document.querySelectorAll('.fade-in-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // --- Testimonial Carousel ---
+        $(document).ready(function(){
+            $('.testimonial-carousel').slick({
+                dots: true,
+                infinite: true,
+                speed: 500,
+                slidesToShow: 2,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000,
+                arrows: false,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1,
+                        }
+                    }
+                ]
+            });
+        });
+
+    </script>
+
+</body>
+</html>
+

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Attendly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glow-color: #00d4ff;
+            --glow-color-alt: #007bff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #050818;
+            color: #E2E8F0; /* Slate 200 */
+            overflow-x: hidden;
+        }
+
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .neon-glow-text {
+            text-shadow:
+                0 0 5px var(--glow-color),
+                0 0 10px var(--glow-color),
+                0 0 20px var(--glow-color),
+                0 0 40px var(--glow-color-alt),
+                0 0 80px var(--glow-color-alt);
+        }
+        
+        .soft-glow-text {
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+        
+        .cinematic-gradient-bg {
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 123, 255, 0.2), transparent 40%),
+                              radial-gradient(circle at 0% 100%, rgba(0, 212, 255, 0.15), transparent 30%),
+                              radial-gradient(circle at 100% 100%, rgba(0, 123, 255, 0.15), transparent 30%);
+        }
+
+        .glassmorphic-card {
+            background: rgba(14, 21, 57, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 123, 255, 0.1);
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-poppins">
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 py-4 px-4 sm:px-6 lg:px-8 bg-black/30 backdrop-blur-md border-b border-white/10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-white neon-glow-text" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v6h6v-2h-4V7z"></path></svg>
+                <h1 class="text-2xl font-bold text-white soft-glow-text">Attendly</h1>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8 text-slate-300">
+                <a href="index.html#features" class="hover:text-white hover:soft-glow-text transition-all duration-300">Features</a>
+                <a href="index.html#pricing" class="hover:text-white hover:soft-glow-text transition-all duration-300">Pricing</a>
+                 <a href="about.html" class="text-white soft-glow-text transition-all duration-300">About Us</a>
+            </nav>
+            <a href="index.html#pricing" class="hidden md:inline-block glow-btn-secondary text-white font-semibold px-5 py-2 rounded-lg transition" style="border-color: var(--glow-color); box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);">
+                Get Attendly Now
+            </a>
+        </div>
+    </header>
+
+    <main class="relative z-10 pt-32 pb-20">
+        <!-- Page Title Section -->
+        <section class="text-center cinematic-gradient-bg py-16">
+            <div class="container mx-auto px-4 fade-in-up">
+                <h1 class="text-4xl md:text-6xl font-bold text-white neon-glow-text">Our Mission</h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-300">
+                    To empower small businesses with simple, affordable, and secure tools that give them back their most valuable asset: time.
+                </p>
+            </div>
+        </section>
+
+        <!-- Main Content Section -->
+        <section class="mt-16">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <div class="glassmorphic-card p-8 md:p-12 rounded-2xl fade-in-up" style="transition-delay: 200ms;">
+                    
+                    <div class="prose prose-lg max-w-none text-slate-300 prose-headings:text-cyan-300 prose-strong:text-white">
+                        <h2 class="soft-glow-text">The Story Behind Attendly</h2>
+                        <p>Attendly was born out of a common frustration. As small business owners ourselves, we grew tired of the endless cycle of monthly subscription fees for software that was often too complicated for our needs. We wanted a time tracking solution that was powerful yet simple, secure yet accessible. We looked everywhere, but couldn't find it. So, we decided to build it.</p>
+                        <p>We realized that millions of businesses already use and trust Google Workspace. The infrastructure is robust, secure, and for most, completely free. Why not build a solution on top of that? That's when the idea for Attendly sparked to life: a one-time purchase time clock that runs entirely within your own Google account.</p>
+                        
+                        <h2 class="mt-12 soft-glow-text">Our Philosophy</h2>
+                        <p>We believe in a few core principles:</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-cyan-400 font-bold mr-3 mt-1">✓</span>
+                                <div><strong>Ownership Matters:</strong> You should own your software, not rent it. A one-time purchase eliminates financial uncertainty and puts you in control.</div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-cyan-400 font-bold mr-3 mt-1">✓</span>
+                                <div><strong>Simplicity is Power:</strong> The best tools are the ones that are easy to use. We designed Attendly to be intuitive for both managers and employees, with zero training required.</div>
+                            </li>
+                             <li class="flex items-start">
+                                <span class="text-cyan-400 font-bold mr-3 mt-1">✓</span>
+                                <div><strong>Your Data is Yours:</strong> We have a steadfast commitment to data privacy. With Attendly, your sensitive employee data never touches our servers. It stays securely in your Google account, where it belongs.</div>
+                            </li>
+                        </ul>
+                        <p class="mt-8">Thank you for being a part of our journey to simplify time tracking for businesses everywhere.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="py-16 border-t border-white/10 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Column 1: Logo & Socials -->
+                <div class="md:col-span-1">
+                     <div class="flex items-center space-x-2 mb-4">
+                        <svg class="w-8 h-8 text-white soft-glow-text" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v6h6v-2h-4V7z"></path></svg>
+                        <h3 class="text-2xl font-bold text-white">Attendly</h3>
+                    </div>
+                    <p class="text-slate-400 text-sm">The simple, one-time purchase time clock for smart businesses.</p>
+                </div>
+                 <!-- Mini Sitemap -->
+                <div class="md:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-8">
+                     <div>
+                        <h4 class="font-bold text-white mb-4">Product</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li><a href="index.html#features" class="hover:text-cyan-400">Features</a></li>
+                            <li><a href="index.html#pricing" class="hover:text-cyan-400">Pricing</a></li>
+                            <li><a href="index.html#how-it-works" class="hover:text-cyan-400">How It Works</a></li>
+                            <li><a href="index.html#faq" class="hover:text-cyan-400">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white mb-4">Company</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li><a href="about.html" class="hover:text-cyan-400">About Us</a></li>
+                            <li><a href="#" class="hover:text-cyan-400">Contact</a></li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h4 class="font-bold text-white mb-4">Legal</h4>
+                        <ul class="space-y-2 text-sm text-slate-400">
+                            <li><a href="#" class="hover:text-cyan-400">Privacy Policy</a></li>
+                            <li><a href="#" class="hover:text-cyan-400">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-12 text-center text-sm text-slate-500 border-t border-white/10 pt-8">
+                &copy; 2025 Attendly. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        // --- Particle Background Effect ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+        const particleConfig = {
+            count: 70,
+            size: 2,
+            speed: 0.5,
+            color: 'rgba(0, 212, 255, 0.7)',
+            lineColor: 'rgba(0, 123, 255, 0.1)',
+            maxDistance: 150
+        };
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            let numberOfParticles = particleConfig.count;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * particleConfig.size) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * particleConfig.speed) - (particleConfig.speed / 2);
+                let directionY = (Math.random() * particleConfig.speed) - (particleConfig.speed / 2);
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, particleConfig.color));
+            }
+        }
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+
+        // --- Intersection Observer for Fade-in Animations ---
+        const sections = document.querySelectorAll('.fade-in-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+    </script>
+</body>
+</html>

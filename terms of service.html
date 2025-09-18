@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Attendly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glow-color: #00d4ff;
+            --glow-color-alt: #007bff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #050818;
+            color: #E2E8F0; /* Slate 200 */
+            overflow-x: hidden;
+        }
+
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .neon-glow-text {
+            text-shadow:
+                0 0 5px var(--glow-color),
+                0 0 10px var(--glow-color),
+                0 0 20px var(--glow-color),
+                0 0 40px var(--glow-color-alt),
+                0 0 80px var(--glow-color-alt);
+        }
+        
+        .soft-glow-text {
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+        
+        .cinematic-gradient-bg {
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 123, 255, 0.2), transparent 40%),
+                              radial-gradient(circle at 0% 100%, rgba(0, 212, 255, 0.15), transparent 30%),
+                              radial-gradient(circle at 100% 100%, rgba(0, 123, 255, 0.15), transparent 30%);
+        }
+
+        .glassmorphic-card {
+            background: rgba(14, 21, 57, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 123, 255, 0.1);
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-poppins">
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 py-4 px-4 sm:px-6 lg:px-8 bg-black/30 backdrop-blur-md border-b border-white/10">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-white neon-glow-text" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v6h6v-2h-4V7z"></path></svg>
+                <h1 class="text-2xl font-bold text-white soft-glow-text">Attendly</h1>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8 text-slate-300">
+                <a href="index.html" class="hover:text-white hover:soft-glow-text transition-all duration-300">Home</a>
+                <a href="about.html" class="hover:text-white hover:soft-glow-text transition-all duration-300">About Us</a>
+                <a href="contact.html" class="hover:text-white hover:soft-glow-text transition-all duration-300">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="relative z-10 pt-32 pb-20">
+        <!-- Page Title Section -->
+        <section class="text-center cinematic-gradient-bg py-16">
+            <div class="container mx-auto px-4 fade-in-up">
+                <h1 class="text-4xl md:text-6xl font-bold text-white neon-glow-text">Terms of Service</h1>
+                <p class="mt-4 text-slate-400">Last Updated: September 12, 2025</p>
+            </div>
+        </section>
+
+        <!-- Main Content Section -->
+        <section class="mt-16">
+            <div class="container mx-auto px-4 max-w-4xl">
+                <div class="glassmorphic-card p-8 md:p-12 rounded-2xl fade-in-up" style="transition-delay: 200ms;">
+                    
+                    <div class="prose prose-lg max-w-none text-slate-300 prose-headings:text-cyan-300 prose-strong:text-white prose-a:text-cyan-400 hover:prose-a:text-cyan-200">
+                        <p>Welcome to Attendly. These Terms of Service ("Terms") govern your purchase and use of the Attendly software and any related services ("Service"). By purchasing or using our Service, you agree to be bound by these Terms.</p>
+
+                        <h2 class="soft-glow-text">1. The Service</h2>
+                        <p>Attendly provides a set of digital files (a Google Sheet template and a Google Apps Script) that you, the user, install and operate within your own Google Account. The Service is sold as a one-time purchase, granting you a lifetime license to use the software as-is.</p>
+                        
+                        <h2 class="soft-glow-text">2. License</h2>
+                        <p>Upon purchase, we grant you a perpetual, non-exclusive, non-transferable license to use, modify, and run the Attendly codebase for your internal business operations. You may not resell, redistribute, or sublicense the software or any modified version of it.</p>
+
+                        <h2 class="soft-glow-text">3. Responsibility and Data</h2>
+                        <p>You are solely responsible for the installation, operation, and maintenance of the Attendly software within your Google Account. Because we do not host or have access to your data, you are also solely responsible for the security and management of your data, in accordance with Google's terms of service.</p>
+
+                        <h2 class="soft-glow-text">4. Support</h2>
+                        <p>The level of support provided depends on the package purchased. The "Starter" package includes standard email support for installation issues. The "Business" package includes priority support and a white-glove installation service where we assist you in setting up the system in your account.</p>
+
+                        <h2 class="soft-glow-text">5. Refunds</h2>
+                        <p>We offer a 30-day money-back guarantee. If you are not satisfied with the Service for any reason within 30 days of purchase, you may request a full refund.</p>
+
+                        <h2 class="soft-glow-text">6. Disclaimer of Warranties</h2>
+                        <p>The Service is provided "as is." We make no warranties, express or implied, regarding the Service's performance, including that it will be error-free or that it will meet your specific requirements. The entire risk as to the quality and performance of the Service is with you.</p>
+
+                        <h2 class="soft-glow-text">7. Limitation of Liability</h2>
+                        <p>In no event shall Attendly be liable for any damages (including, without limitation, lost profits, business interruption, or lost information) rising out of the use of or inability to use the Service.</p>
+
+                        <h2 class="soft-glow-text">8. Governing Law</h2>
+                        <p>These Terms shall be governed by the laws of the jurisdiction in which our company is based, without regard to its conflict of law provisions.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="py-16 border-t border-white/10 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-slate-400 text-sm">The simple, one-time purchase time clock for smart businesses.</p>
+            <div class="mt-8 text-center text-sm text-slate-500 border-t border-white/10 pt-8 max-w-xs mx-auto">
+                &copy; 2025 Attendly. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        // --- Particle Background Effect ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+        function initParticles(particleCount = 70) {
+            particlesArray = [];
+            for (let i = 0; i < particleCount; i++) {
+                let size = Math.random() * 2 + 1;
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                let directionX = (Math.random() * 0.5) - 0.25;
+                let directionY = (Math.random() * 0.5) - 0.25;
+                particlesArray.push({ x, y, directionX, directionY, size });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                let p = particlesArray[i];
+                p.x += p.directionX;
+                p.y += p.directionY;
+                if (p.x > canvas.width || p.x < 0) p.directionX = -p.directionX;
+                if (p.y > canvas.height || p.y < 0) p.directionY = -p.directionY;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 212, 255, 0.7)';
+                ctx.fill();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+
+        initParticles();
+        animateParticles();
+
+        const sections = document.querySelectorAll('.fade-in-up');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => observer.observe(section));
+    </script>
+</body>
+</html>
